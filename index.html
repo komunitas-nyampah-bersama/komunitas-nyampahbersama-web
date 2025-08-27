@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sekolah Bebas Sampah 2030 - Mengubah Sampah Menjadi Emas</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #1a365d;
+            --accent-blue: #2a4a7c;
+            --light-blue: #e1eaf5;
+            --gold: #d4af37;
+            --light-gold: #f8f0d9;
+            --dark-text: #2d3748;
+            --light-text: #f8f9fa;
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: var(--dark-text);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--accent-blue) 100%);
+            color: var(--light-text);
+            padding: 20px 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo {
+            height: 70px;
+            width: auto;
+        }
+        
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: 700;
+            line-height: 1.2;
+            text-transform: uppercase;
+        }
+        
+        /* Navigation */
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+        
+        nav a {
+            color: var(--light-text);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            padding: 5px 10px;
+            border-radius: 4px;
+        }
+        
+        nav a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(26, 54, 93, 0.8), rgba(26, 54, 93, 0.9)), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect fill="%231a365d" width="100" height="100"/><path fill="%232a4a7c" d="M0 0L100 100M100 0L0 100" stroke-width="0.5"/></svg>');
+            color: var(--light-text);
+            padding: 80px 0;
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 2.8rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto 30px;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background-color: var(--gold);
+            color: var(--primary-blue);
+            padding: 12px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: var(--transition);
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+        }
+        
+        /* Countdown Section */
+        .countdown {
+            background-color: var(--light-blue);
+            padding: 70px 0;
+            text-align: center;
+        }
+        
+        .countdown-title {
+            font-size: 2.2rem;
+            color: var(--primary-blue);
+            margin-bottom: 10px;
+        }
+        
+        .countdown-subtitle {
+            font-size: 1.2rem;
+            color: var(--accent-blue);
+            margin-bottom: 40px;
+        }
+        
+        .timer {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .timer-item {
+            background-color: white;
+            padding: 25px 20px;
+            border-radius: 12px;
+            min-width: 130px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: var(--transition);
+        }
+        
+        .timer-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
+        
+        .timer-number {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin-bottom: 8px;
+        }
+        
+        .timer-label {
+            font-size: 1rem;
+            color: var(--accent-blue);
+            font-weight: 500;
+        }
+        
+        /* Content Sections */
+        .section {
+            padding: 80px 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 2.2rem;
+            color: var(--primary-blue);
+            margin-bottom: 50px;
+            position: relative;
+        }
+        
+        .section-title:after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background-color: var(--gold);
+            margin: 15px auto;
+            border-radius: 2px;
+        }
+        
+        .section-light {
+            background-color: white;
+        }
+        
+        .section-dark {
+            background-color: var(--light-blue);
+        }
+        
+        .card-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: var(--transition);
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.12);
+        }
+        
+        .card-header {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--accent-blue) 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 1.4rem;
+            font-weight: 600;
+        }
+        
+        .card-body {
+            padding: 25px;
+        }
+        
+        .card-icon {
+            font-size: 2.5rem;
+            color: var(--gold);
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--primary-blue);
+            color: var(--light-text);
+            padding: 60px 0 30px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        
+        .footer-contact h3 {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            color: var(--gold);
+        }
+        
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .contact-icon {
+            color: var(--gold);
+            font-size: 1.2rem;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            nav ul {
+                gap: 15px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .timer {
+                gap: 15px;
+            }
+            
+            .timer-item {
+                min-width: 100px;
+                padding: 20px 15px;
+            }
+            
+            .timer-number {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-content">
+            <div class="logo-container">
+                <img src="1230DDF9-6708-4B8E-842E-CCFD44179E8E.PNG" alt="Sekolah Bebas Sampah 2030" class="logo">
+                <div class="logo-text">Sekolah Bebas Sampah 2030</div>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#tentang">Tentang</a></li>
+                    <li><a href="#target">Target</a></li>
+                    <li><a href="#peran">Peran Pemerintah</a></li>
+                    <li><a href="#keuntungan">Keuntungan</a></li>
+                    <li><a href="#kontak">Kontak</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>Mengubah Sampah Menjadi Emas</h1>
+            <p>Gerakan kolaboratif jangka panjang yang fokus pada pendidikan lingkungan dan aksi nyata pengelolaan sampah di sekolah menuju target bebas sampah dan ekonomi sirkular 2030.</p>
+            <a href="#kontak" class="cta-button">Gabung Sekarang</a>
+        </div>
+    </section>
+
+    <!-- Countdown Section -->
+    <section id="countdown" class="countdown">
+        <div class="container">
+            <h2 class="countdown-title">Menuju 2030</h2>
+            <p class="countdown-subtitle">Bersama kita wujudkan Indonesia bebas sampah</p>
+            <div class="timer" id="countdown-timer">
+                <div class="timer-item">
+                    <div class="timer-number" id="days">364</div>
+                    <div class="timer-label">Hari</div>
+                </div>
+                <div class="timer-item">
+                    <div class="timer-number" id="hours">23</div>
+                    <div class="timer-label">Jam</div>
+                </div>
+                <div class="timer-item">
+                    <div class="timer-number" id="minutes">59</div>
+                    <div class="timer-label">Menit</div>
+                </div>
+                <div class="timer-item">
+                    <div class="timer-number" id="seconds">59</div>
+                    <div class="timer-label">Detik</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="tentang" class="section section-light">
+        <div class="container">
+            <h2 class="section-title">Apa Itu Program Ini?</h2>
+            <div class="card-container">
+                <div class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-recycle"></i>
+                    </div>
+                    <div class="card-body">
+                        <p>Gerakan kolaboratif jangka panjang yang fokus pada pendidikan lingkungan dan aksi nyata pengelolaan sampah di sekolah. Melibatkan guru, siswa, dan masyarakat desa menuju target bebas sampah dan ekonomi sirkular 2030.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Important Section -->
+    <section class="section section-dark">
+        <div class="container">
+            <h2 class="section-title">Mengapa Penting?</h2>
+            <div class="card-container">
+                <div class="card">
+                    <div class="card-header">Masalah</div>
+                    <div class="card-body">
+                        <p>Sampah merusak lingkungan & kesehatan. Dengan program ini, kita dapat mengurangi dampak negatif sampah terhadap ekosistem dan kesehatan masyarakat.</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">Peluang</div>
+                    <div class="card-body">
+                        <p>Sampah bernilai ekonomi jika dikelola. Program ini mengajarkan cara mengubah sampah menjadi sumber penghasilan melalui pengelolaan yang tepat.</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">Investasi</div>
+                    <div class="card-body">
+                        <p>Membentuk generasi muda peduli lingkungan. Pendidikan sejak dini tentang pengelolaan sampah akan menciptakan generasi yang bertanggung jawab terhadap lingkungan.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Target Section -->
+    <section id="target" class="section section-light">
+        <div class="container">
+            <h2 class="section-title">Target & Sasaran</h2>
+            <div class="card-container">
+                <div class="card">
+                    <div class="card-header">Jangka Pendek (1 Tahun)</div>
+                    <div class="card-body">
+                        <ul>
+                            <li>50 Guru Pionir</li>
+                            <li>10 Sekolah Percontohan</li>
+                            <li>Bank Sampah Digital Mini</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">Jangka Panjang (2030)</div>
+                    <div class="card-body">
+                        <ul>
+                            <li>500 Guru Pionir</li>
+                            <li>100 Sekolah</li>
+                            <li>Ekosistem Pengelolaan Sampah Berkelanjutan</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Government Role Section -->
+    <section id="peran" class="section section-dark">
+        <div class="container">
+            <h2 class="section-title">Peran Pemerintah Desa</h2>
+            <div class="card-container">
+                <div class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-handshake"></i>
+                    </div>
+                    <div class="card-body">
+                        <h3>Fasilitasi</h3>
+                        <p>Hubungkan dengan RT/RW & komunitas untuk memastikan program berjalan efektif di seluruh lapisan masyarakat.</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-bullhorn"></i>
+                    </div>
+                    <div class="card-body">
+                        <h3>Dukungan Moral</h3>
+                        <p>Jadilah narasumber & penyemangat warga untuk menciptakan partisipasi aktif dalam program ini.</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-puzzle-piece"></i>
+                    </div>
+                    <div class="card-body">
+                        <h3>Sinergi Program</h3>
+                        <p>Integrasikan dengan program kebersihan desa yang sudah ada untuk menciptakan dampak yang lebih besar.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits Section -->
+    <section id="keuntungan" class="section section-light">
+        <div class="container">
+            <h2 class="section-title">Keuntungan untuk Desa</h2>
+            <div class="card-container">
+                <div class="card">
+                    <div class="card-header">Lingkungan</div>
+                    <div class="card-body">
+                        <p>Desa bersih & sehat dengan pengelolaan sampah yang tepat, mengurangi polusi dan risiko kesehatan.</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">Ekonomi</div>
+                    <div class="card-body">
+                        <p>Usaha baru berbasis daur ulang yang dapat meningkatkan pendapatan masyarakat desa.</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">Pendidikan</div>
+                    <div class="card-body">
+                        <p>Desa jadi percontohan nasional dalam pengelolaan sampah dan pendidikan lingkungan.</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">Dana Desa</div>
+                    <div class="card-body">
+                        <p>Saluran tepat untuk program positif & berkelanjutan yang dapat didanai melalui anggaran desa.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="kontak">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-about">
+                    <div class="footer-logo">Sekolah Bebas Sampah 2030</div>
+                    <p>"Mengubah Sampah Menjadi Emas" - Gerakan kolaboratif untuk menciptakan lingkungan sekolah yang bebas sampah dan membangun ekonomi sirkular.</p>
+                </div>
+                <div class="footer-contact">
+                    <h3>Kontak Kami</h3>
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <i class="fas fa-user contact-icon"></i>
+                            <span>[Nama Anda]</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-phone contact-icon"></i>
+                            <span>[No. HP/WhatsApp]</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-map-marker-alt contact-icon"></i>
+                            <span>[Alamat Komunitas]</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 Program Sekolah Bebas Sampah 2030. All rights reserved.</p>
+            </div>
+        </div>
+    
+    <!-- Registration / Form Embed Section -->
+    <section id="daftar" class="section section-light">
+        <div class="container">
+            <h2 class="section-title">Daftar Komunitas Nyampah Bersama</h2>
+            <div style="max-width: 980px; margin: 0 auto;">
+                <div style="background:#ffffff;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.08);overflow:hidden;border:1px solid rgba(0,0,0,.06)">
+                    <div style="padding:18px 18px;border-bottom:1px solid rgba(0,0,0,.06);background:linear-gradient(135deg,#1a365d,#2a4a7c);color:#f8f9fa">
+                        <h3 style="margin:0 0 6px;font-size:1.35rem">Pendaftaran Anggota</h3>
+                        <p style="margin:0;opacity:.9">Isi data singkat di bawah ini — 3 menit, langsung gabung ✅</p>
+                    </div>
+                    <div style="position:relative">
+                        <iframe
+                            title="Formulir Pendaftaran Nyampah Bersama"
+                            aria-label="Formulir Pendaftaran Nyampah Bersama"
+                            loading="lazy"
+                            src="https://docs.google.com/forms/d/e/1FAIpQLSeCxyLC9wlSnahmxQPs1uRVMHe8lJ5ywB5GXwInICH5_Xprlw/viewform?embedded=true"
+                            style="width:100%;height:82vh;min-height:720px;border:0;display:block;background:transparent">
+                        </iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    </footer>
+
+    <script>
+        // Countdown to January 1, 2030
+        function updateCountdown() {
+            const targetDate = new Date('January 1, 2030 00:00:00').getTime();
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+            
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            
+            document.getElementById('days').innerText = days;
+            document.getElementById('hours').innerText = hours;
+            document.getElementById('minutes').innerText = minutes;
+            document.getElementById('seconds').innerText = seconds;
+        }
+        
+        // Initial update
+        updateCountdown();
+        
+        // Update every second
+        setInterval(updateCountdown, 1000);
+    </script>
+</body>
+</html>
