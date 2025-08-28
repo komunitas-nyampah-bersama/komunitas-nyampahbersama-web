@@ -250,56 +250,23 @@
             margin-bottom: 20px;
         }
         
-        /* Footer */
-        footer {
-            background-color: var(--primary-blue);
-            color: var(--light-text);
-            padding: 60px 0 30px;
-        }
-        
-        .footer-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 40px;
-            margin-bottom: 40px;
-        }
-        
-        .footer-logo {
-            font-size: 1.8rem;
-            font-weight: 700;
-            margin-bottom: 20px;
-        }
-        
-        .footer-contact h3 {
-            font-size: 1.4rem;
-            margin-bottom: 20px;
-            color: var(--gold);
-        }
-        
-        .contact-info {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        
-        .contact-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        
-        .contact-icon {
-            color: var(--gold);
-            font-size: 1.2rem;
-        }
-        
-        .copyright {
-            text-align: center;
-            padding-top: 30px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            font-size: 0.9rem;
-            color: rgba(255, 255, 255, 0.7);
-        }
+       footer .footer-content{
+  display:grid; gap:1.25rem;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  margin-bottom:1rem;
+}
+footer .footer-col h3{margin:0 0 .5rem 0}
+footer .footer-col h4{margin:.5rem 0 .25rem 0; font-size:0.95rem; opacity:.9}
+footer .footer-logo{font-weight:800; font-size:1.05rem}
+footer .tagline{margin:.25rem 0 .15rem 0; font-weight:700}
+footer .subtagline{margin:0 0 .5rem 0; opacity:.9}
+footer .list-plain{margin:.25rem 0; padding-left:1.1rem}
+footer .list-plain li{margin:.15rem 0}
+.footer-links{border-top:1px solid rgba(0,0,0,.08); padding-top:.75rem; margin-top:.5rem}
+.footer-links .links-grid{display:grid; gap:.4rem; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); padding-left:1rem}
+.footer-links h3{margin:.25rem 0 .5rem 0}
+footer a{text-decoration:none}
+footer a:hover{text-decoration:underline}
         
         /* Responsive Design */
         @media (max-width: 768px) {
@@ -507,75 +474,150 @@
             </div>
         </div>
     </section>
+<!-- Benefits Section -->
+<section id="keuntungan" class="section section-light">
+  <div class="container">
+    <h2 class="section-title">Keuntungan Program</h2>
+    <div class="card-container">
 
-    <!-- Benefits Section -->
-    <section id="keuntungan" class="section section-light">
-        <div class="container">
-            <h2 class="section-title">Keuntungan untuk Desa</h2>
-            <div class="card-container">
-                <div class="card">
-                    <div class="card-header">Lingkungan</div>
-                    <div class="card-body">
-                        <p>Desa bersih & sehat dengan pengelolaan sampah yang tepat, mengurangi polusi dan risiko kesehatan.</p>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-header">Ekonomi</div>
-                    <div class="card-body">
-                        <p>Usaha baru berbasis daur ulang yang dapat meningkatkan pendapatan masyarakat desa.</p>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-header">Pendidikan</div>
-                    <div class="card-body">
-                        <p>Desa jadi percontohan nasional dalam pengelolaan sampah dan pendidikan lingkungan.</p>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-header">Dana Desa</div>
-                    <div class="card-body">
-                        <p>Saluran tepat untuk program positif & berkelanjutan yang dapat didanai melalui anggaran desa.</p>
-                    </div>
-                </div>
-            </div>
+      <!-- Untuk Guru -->
+      <div class="card">
+        <div class="card-header">Untuk Guru</div>
+        <div class="card-body">
+          <ul>
+            <li>Portofolio nyata P5/KOSP: proyek lingkungan terukur (emisi & limbah).</li>
+            <li>Sertifikasi/insentif & jejaring <strong>Guru Pionir</strong> tingkat kab/kota–nasional.</li>
+            <li>Akses modul, template, dan peluang <strong>CSR/micro-grant</strong> untuk kelas hijau.</li>
+            <li>Dashboard dampak → bukti kinerja & pengembangan karier.</li>
+          </ul>
         </div>
-    </section>
+      </div>
 
-    <!-- Footer -->
-    <footer id="kontak">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-about">
-                    <div class="footer-logo">Sekolah Bebas Sampah 2030</div>
-                    <p>"Mengubah Sampah Menjadi Emas" - Gerakan kolaboratif untuk menciptakan lingkungan sekolah yang bebas sampah dan membangun ekonomi sirkular.</p>
-                </div>
-                <div class="footer-contact">
-                    <h3>Kontak Kami</h3>
-                    <div class="contact-info">
-                        <div class="contact-item">
-                            <i class="fas fa-user contact-icon"></i>
-                            <span>Muhamad Oky Muhlisin</span>
-                        </div>
-                        <div class="contact-item">
-                            <i class="fas fa-phone contact-icon"></i>
-                            <span>+62 831 7782 8139</span>
-                        </div>
-                        <div class="contact-item">
-                            <i class="fas fa-map-marker-alt contact-icon"></i>
-                            <span>[Jl. Jendeal Ahmad Yani Lt Manggis Rt 02 Rw 01 kel.Silaberanti kec.Seberang ulu 1 Plaju, 30151 Palembang, Sumatera Selatan, Indonesia
-
-📍 Lokasi KantorGoogle Maps Lokasi (baru)
-Plus code: 6P962QW7+25 / Jam: 24 jam]</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="copyright">
-                <p>&copy; 2025 Program Sekolah Bebas Sampah 2030. All rights reserved.</p>
-            </div>
+      <!-- Untuk Sekolah -->
+      <div class="card">
+        <div class="card-header">Untuk Sekolah</div>
+        <div class="card-body">
+          <ul>
+            <li><strong>Biaya kebersihan turun</strong> lewat pemilahan, kompos, dan daur ulang.</li>
+            <li>Reputasi “Sekolah Hijau” → akreditasi & kepercayaan orang tua meningkat.</li>
+            <li>Bank sampah & kebun sekolah → pendapatan kecil + bahan ajar kontekstual.</li>
+            <li>Kepatuhan SDG 12–13–15 & kontributor data <strong>NDC Indonesia</strong>.</li>
+          </ul>
         </div>
-    </footer>
+      </div>
 
+      <!-- Untuk Masyarakat -->
+      <div class="card">
+        <div class="card-header">Untuk Masyarakat</div>
+        <div class="card-body">
+          <ul>
+            <li>UMKM hijau tumbuh: daur ulang, kompos/eco-enzim, biogas mini.</li>
+            <li>Lingkungan lebih sehat; polusi & risiko penyakit menurun.</li>
+            <li>Keluarga dapat <strong>nilai ekonomi dari sampah</strong> & literasi iklim meningkat.</li>
+            <li>Rantai pasok lokal material daur ulang makin rapi & transparan.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Untuk Indonesia -->
+      <div class="card">
+        <div class="card-header">Untuk Indonesia</div>
+        <div class="card-body">
+          <ul>
+            <li>Kontribusi nyata ke target <strong>NDC 2030</strong> (penurunan emisi 31,89%/43,20%).</li>
+            <li>Percepatan <strong>ekonomi sirkular nasional</strong> dari akar rumput.</li>
+            <li>Citra Indonesia pelopor solusi limbah & iklim di panggung dunia.</li>
+            <li>Basis data berbasis sekolah untuk kebijakan & pembiayaan hijau yang tepat sasaran.</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer id="kontak">
+  <div class="container">
+    <div class="footer-content">
+
+      <!-- Brand -->
+      <div class="footer-col">
+        <div class="footer-logo">KOMUNITAS NYAMPAH BERSAMA</div>
+        <p class="tagline">“KUTEMANI NYAMPAHMU SAMPAI TUA”</p>
+        <p class="subtagline">“Dari Sampah Lahir Nilai, Dari Partisipasi Lahir Perubahan”</p>
+        <p><strong>Core License:</strong> 
+          <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">CC BY-SA 4.0</a>
+        </p>
+      </div>
+
+      <!-- Legal & IDs -->
+      <div class="footer-col">
+        <h3>LEGAL & ID</h3>
+        <ul class="list-plain">
+          <li>Registrasi Erasmus+ & European Solidarity Corps</li>
+          <li><strong>OID:</strong> E10404020</li>
+          <li><strong>DOI:</strong> <a href="https://doi.org/10.5281/zenodo.16663697" target="_blank" rel="noopener">10.5281/zenodo.16663697</a></li>
+          <li><strong>NPWP:</strong> 397576190016000</li>
+          <li><strong>Erasmus+ Organisation ID:</strong> E10404020</li>
+          <li><strong>ESC50-QLA:</strong> Draft Quality Label (Desentralisasi)</li>
+          <li><a href="https://zenodo.org/communities/nyampahbersama" target="_blank" rel="noopener">Komunitas di Zenodo</a></li>
+        </ul>
+      </div>
+
+      <!-- Founder -->
+      <div class="footer-col">
+        <h3>FOUNDER INFORMATION</h3>
+        <p><strong>Muhamad Oky Muhlisin</strong><br>
+        <em>Independent Researcher — Teknologi dan Inovasi</em></p>
+        <h4 class="mt-8">EU Login & Author Identification</h4>
+        <ul class="list-plain">
+          <li><strong>Paspor:</strong> E2681237</li>
+          <li><strong>EU Login ID:</strong> n00jcciv</li>
+          <li><strong>ORCID:</strong> —</li>
+        </ul>
+      </div>
+
+      <!-- Company Profile / Address -->
+      <div class="footer-col">
+        <h3>COMPANY PROFILE</h3>
+        <p><strong>Legal Name:</strong> Nyampah Bersama</p>
+        <p><strong>Founding Year:</strong> 2025</p>
+        <p><strong>Erasmus+ ID:</strong> E10404020</p>
+        <p><strong>Tax ID:</strong> 397576190016000</p>
+        <p><strong>Legal Address:</strong><br>
+          Jl. Jenderal Ahmad Yani, Lorong Manggis, RT 02/RW 01, Kel. Silaberanti, 
+          Kec. Seberang Ulu I (Plaju), Palembang 30151, Sumatera Selatan — Indonesia
+        </p>
+        <p>
+          <strong>Plus Code:</strong> 6P962QW7+25 • <strong>Jam:</strong> 24 jam<br>
+          <a href="https://maps.app.goo.gl/rFF7p6orEyMRoGU66" target="_blank" rel="noopener">Lihat di Google Maps</a>
+        </p>
+        <p><strong>Kontak:</strong> +62 831-7782-8139</p>
+      </div>
+    </div>
+
+    <!-- Social / Channels -->
+    <div class="footer-links">
+      <h3>Saluran & Jejaring</h3>
+      <ul class="links-grid">
+        <li><a href="https://www.facebook.com/share/1CfGR691pU/?mibextid=wwXIfr" target="_blank" rel="noopener">Halaman Facebook</a></li>
+        <li><a href="https://whatsapp.com/channel/0029Vb5UCzEDOQIOxdC4Du1R" target="_blank" rel="noopener">Saluran Publik WhatsApp</a></li>
+        <li><a href="https://t.me/NyampahBersamaku" target="_blank" rel="noopener">Channel Telegram</a></li>
+        <li><a href="https://chat.whatsapp.com/L7haZTMkqCk6kdzjslw8Vn" target="_blank" rel="noopener">Komunitas WA (Utama)</a></li>
+        <li><a href="https://chat.whatsapp.com/Iwrm1cNXDXrDYjYBnNZ1wK" target="_blank" rel="noopener">Gudang Nyampah (WA)</a></li>
+        <li><a href="https://chat.whatsapp.com/GiC0FArFMdPDTJONwzEm4g" target="_blank" rel="noopener">Q&A Nyampah (WA)</a></li>
+        <li><a href="https://wa.me/message/NYH5AV5RMFOEJ1" target="_blank" rel="noopener">Bang Nyampahin (WA Chat)</a></li>
+        <li><a href="https://docs.google.com/forms/d/e/1FAIpQLSeCxyLC9wlSnahmxQPs1uRVMHe8lJ5ywB5GXwInICH5_Xprlw/viewform" target="_blank" rel="noopener">Form Gabung</a></li>
+        <li><a href="https://www.tiktok.com/@bang_nyampahin" target="_blank" rel="noopener">TikTok: @bang_nyampahin</a></li>
+      </ul>
+    </div>
+
+    <div class="copyright">
+      <p>&copy; 2025 Komunitas Nyampah Bersama — Program Sekolah Bebas Sampah 2030.</p>
+    </div>
+  </div>
+</footer>
     <script>
         // Countdown to January 1, 2030
         function updateCountdown() {
