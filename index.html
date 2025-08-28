@@ -267,6 +267,91 @@ footer .list-plain li{margin:.15rem 0}
 .footer-links h3{margin:.25rem 0 .5rem 0}
 footer a{text-decoration:none}
 footer a:hover{text-decoration:underline}
+
+        /* Footer Styles */
+footer {
+  background: linear-gradient(135deg, var(--primary-blue) 0%, var(--accent-blue) 100%);
+  color: var(--light-text);
+  padding: 60px 20px 30px;
+  margin-top: 60px;
+}
+
+footer .footer-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 30px;
+  margin-bottom: 30px;
+}
+
+footer .footer-col h3,
+footer .footer-col h4 {
+  color: var(--gold);
+  margin-bottom: 12px;
+}
+
+footer .footer-logo {
+  font-size: 1.3rem;
+  font-weight: 800;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  color: var(--light-text);
+}
+
+footer .tagline {
+  font-weight: 600;
+  margin: 5px 0;
+}
+
+footer .subtagline {
+  font-style: italic;
+  margin-bottom: 10px;
+}
+
+footer .list-plain {
+  list-style: none;
+  padding-left: 0;
+}
+
+footer .list-plain li {
+  margin: 4px 0;
+}
+
+.footer-links {
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  padding-top: 20px;
+  margin-top: 10px;
+}
+
+.footer-links h3 {
+  color: var(--gold);
+  margin-bottom: 12px;
+}
+
+.footer-links .links-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 8px;
+}
+
+footer a {
+  color: var(--light-text);
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+footer a:hover {
+  color: var(--gold);
+  text-decoration: underline;
+}
+
+footer .copyright {
+  text-align: center;
+  font-size: 0.9rem;
+  opacity: 0.8;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  padding-top: 15px;
+  margin-top: 20px;
+}
         
         /* Responsive Design */
         @media (max-width: 768px) {
