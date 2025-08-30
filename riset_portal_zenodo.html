@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Research Publication Portal</title>
+    <title>Research Publication Portal - Zenodo OAuth</title>
     <style>
-        /* CSS yang sama seperti sebelumnya */
         :root {
             --primary: #4361ee;
             --primary-dark: #3a56d4;
@@ -201,6 +200,12 @@
             margin-bottom: 0;
         }
 
+        .requirements {
+            font-size: 12px;
+            color: var(--text-light);
+            margin-top: 5px;
+        }
+
         @media (max-width: 768px) {
             .form-row {
                 flex-direction: column;
@@ -227,17 +232,41 @@
     <div class="container">
         <div class="header">
             <h1>Research Publication Portal</h1>
-            <p>Publish research to Zenodo, record contributions, and claim tokens</p>
+            <p>Publish research to Zenodo Community "nyampahbersama"</p>
         </div>
 
         <div class="tabs">
-            <div class="tab active" data-tab="publish">Publish to Zenodo</div>
+            <div class="tab active" data-tab="auth">Authentication</div>
+            <div class="tab" data-tab="publish">Publish to Zenodo</div>
             <div class="tab" data-tab="record">Record Research</div>
             <div class="tab" data-tab="claim">Claim Tokens</div>
         </div>
 
-        <div class="tab-content active" id="publish-tab">
-            <h2>Publish Research to Zenodo</h2>
+        <!-- Tab Autentikasi -->
+        <div class="tab-content active" id="auth-tab">
+            <h2>Zenodo Authentication</h2>
+            <div id="auth-message" class="message"></div>
+            
+            <div class="form-group">
+                <p>To publish to the "nyampahbersama" community, you need to authenticate with Zenodo first.</p>
+                <button id="oauth-btn" class="btn">
+                    <span id="oauth-btn-text">Authenticate with Zenodo</span>
+                    <span id="oauth-btn-spinner" class="spinner" style="display: none;"></span>
+                </button>
+            </div>
+
+            <div class="form-group" id="token-section" style="display: none;">
+                <label for="access-token">Access Token</label>
+                <input type="text" id="access-token" readonly>
+                <div class="requirements">
+                    Your access token will be used to publish to Zenodo. It will be stored in your browser's local storage.
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Publish to Zenodo (diupdate dengan field komunitas) -->
+        <div class="tab-content" id="publish-tab">
+            <h2>Publish Research to Zenodo Community</h2>
             <div id="publish-message" class="message"></div>
             
             <form id="publish-form">
@@ -249,6 +278,14 @@
                 <div class="form-group">
                     <label for="description">Description *</label>
                     <textarea id="description" name="description" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="community">Zenodo Community</label>
+                    <input type="text" id="community" name="community" value="nyampahbersama" readonly>
+                    <div class="requirements">
+                        Your research will be published to the "nyampahbersama" community.
+                    </div>
                 </div>
 
                 <div class="form-row">
@@ -286,7 +323,7 @@
                     </div>
                 </div>
 
-                <button type="submit" id="publish-btn" class="btn">
+                <button type="submit" id="publish-btn" class="btn" disabled>
                     <span id="publish-btn-text">Publish to Zenodo</span>
                     <span id="publish-btn-spinner" class="spinner" style="display: none;"></span>
                 </button>
@@ -295,6 +332,7 @@
             <div id="publish-result" class="result-box"></div>
         </div>
 
+        <!-- Tab Record Research -->
         <div class="tab-content" id="record-tab">
             <h2>Record Research Contribution</h2>
             <div id="record-message" class="message"></div>
@@ -319,6 +357,7 @@
             <div id="record-result" class="result-box"></div>
         </div>
 
+        <!-- Tab Claim Tokens -->
         <div class="tab-content" id="claim-tab">
             <h2>Claim Research Tokens</h2>
             <div id="claim-message" class="message"></div>
@@ -364,9 +403,104 @@
             });
             
             // Base URL for the Supabase function
-            const FUNCTION_URL = 'https://weueopblwiliyjqaaqvb.supabase.co/functions/v1/super-task';
+            const FUNCTION_URL = 'https://weueopblwiliyjqaaqvb.supabase.co/functions/v1/bright-handler';
             
-            // Publish to Zenodo form
+            // Check if we have an access token in local storage
+            let accessToken = localStorage.getItem('zenodo_access_token');
+            if (accessToken) {
+                document.getElementById('access-token').value = accessToken;
+                document.getElementById('token-section').style.display = 'block';
+                document.getElementById('publish-btn').disabled = false;
+            }
+            
+            // OAuth button
+            const oauthBtn = document.getElementById('oauth-btn');
+            const oauthBtnText = document.getElementById('oauth-btn-text');
+            const oauthBtnSpinner = document.getElementById('oauth-btn-spinner');
+            const authMessage = document.getElementById('auth-message');
+            
+            oauthBtn.addEventListener('click', async function() {
+                setLoadingState(oauthBtn, oauthBtnText, oauthBtnSpinner, true);
+                hideMessage(authMessage);
+                
+                try {
+                    const response = await fetch(FUNCTION_URL, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            action: 'start_oauth'
+                        })
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (response.ok) {
+                        // Redirect to Zenodo OAuth page
+                        window.location.href = result.authUrl;
+                    } else {
+                        showMessage(authMessage, result.message || 'Failed to start OAuth', 'error');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    showMessage(authMessage, 'Network error. Please try again.', 'error');
+                } finally {
+                    setLoadingState(oauthBtn, oauthBtnText, oauthBtnSpinner, false);
+                }
+            });
+            
+            // Check if we have a code parameter in the URL (OAuth callback)
+            const urlParams = new URLSearchParams(window.location.search);
+            const code = urlParams.get('code');
+            
+            if (code) {
+                // We have an OAuth callback, exchange code for token
+                exchangeCodeForToken(code);
+            }
+            
+            // Function to exchange code for access token
+            async function exchangeCodeForToken(code) {
+                setLoadingState(oauthBtn, oauthBtnText, oauthBtnSpinner, true);
+                showMessage(authMessage, 'Exchanging code for access token...', 'success');
+                
+                try {
+                    // The OAuth callback is handled by the Edge Function
+                    // We just need to pass the code to it
+                    const response = await fetch(`${FUNCTION_URL}?code=${code}`, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        }
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (response.ok) {
+                        // Save access token to local storage
+                        localStorage.setItem('zenodo_access_token', result.access_token);
+                        accessToken = result.access_token;
+                        
+                        document.getElementById('access-token').value = accessToken;
+                        document.getElementById('token-section').style.display = 'block';
+                        document.getElementById('publish-btn').disabled = false;
+                        
+                        showMessage(authMessage, 'Authentication successful! You can now publish to Zenodo.', 'success');
+                        
+                        // Remove code from URL
+                        window.history.replaceState({}, document.title, window.location.pathname);
+                    } else {
+                        showMessage(authMessage, result.message || 'Failed to get access token', 'error');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    showMessage(authMessage, 'Network error. Please try again.', 'error');
+                } finally {
+                    setLoadingState(oauthBtn, oauthBtnText, oauthBtnSpinner, false);
+                }
+            }
+            
+            // Publish to Zenodo form (updated to include access token)
             const publishForm = document.getElementById('publish-form');
             const publishBtn = document.getElementById('publish-btn');
             const publishBtnText = document.getElementById('publish-btn-text');
@@ -377,6 +511,11 @@
             publishForm.addEventListener('submit', async function(e) {
                 e.preventDefault();
                 
+                if (!accessToken) {
+                    showMessage(publishMessage, 'Please authenticate with Zenodo first', 'error');
+                    return;
+                }
+                
                 const formData = new FormData(publishForm);
                 const data = {
                     action: 'publish_to_zenodo',
@@ -385,7 +524,9 @@
                     fileUrl: formData.get('fileUrl'),
                     fileName: formData.get('fileName'),
                     access_right: formData.get('access_right'),
-                    license: formData.get('license')
+                    license: formData.get('license'),
+                    community: formData.get('community'),
+                    access_token: accessToken // Include the access token
                 };
                 
                 // Validate required fields
@@ -565,7 +706,7 @@
             }
             
             // Store original button text
-            document.querySelectorAll('#publish-btn-text, #record-btn-text, #claim-btn-text').forEach(el => {
+            document.querySelectorAll('#publish-btn-text, #record-btn-text, #claim-btn-text, #oauth-btn-text').forEach(el => {
                 el.dataset.originalText = el.textContent;
             });
         });
