@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ORCID & Magic Link Authentication</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary: #a8329b;
+            --orcid-color: #a6ce39;
+            --success: #4cc9f0;
+            --error: #e63946;
+            --background: #f8f9fa;
+            --text: #212529;
+            --text-light: #6c757d;
+            --border: #dee2e6;
+            --white: #ffffff;
+            --card-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 500px;
+            width: 100%;
+            background: var(--white);
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .header i {
+            font-size: 64px;
+            margin-bottom: 20px;
+            display: block;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .auth-options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .auth-btn {
+            padding: 16px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .auth-btn.orcid {
+            background-color: var(--orcid-color);
+            color: white;
+        }
+
+        .auth-btn.magic {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .auth-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text);
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.15);
+        }
+
+        .btn {
+            padding: 16px 20px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .message {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .message.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .action-buttons {
+            margin-top: 30px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            display: none;
+        }
+
+        .action-btn {
+            padding: 16px;
+            background: var(--white);
+            border: 2px solid var(--primary);
+            border-radius: 8px;
+            color: var(--primary);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .action-btn:hover {
+            background: var(--primary);
+            color: var(--white);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .action-btn i {
+            font-size: 20px;
+        }
+
+        .user-info {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .info-text {
+            font-size: 16px;
+            color: var(--text);
+        }
+
+        .info-email {
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: var(--text-light);
+            font-size: 14px;
+        }
+
+        @media (max-width: 576px) {
+            .header {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                fontSize: 24px;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <i class="fas fa-user-shield"></i>
+            <h1>ORCID & Magic Link Auth</h1>
+            <p>Login dengan ORCID atau Magic Link</p>
+        </div>
+
+        <div class="content">
+            <div id="message" class="message"></div>
+            
+            <div id="user-info" class="user-info">
+                <p class="info-text">Anda login sebagai: <span id="user-email" class="info-email"></span></p>
+            </div>
+
+            <div id="auth-options" class="auth-options">
+                <button id="orcid-btn" class="auth-btn orcid">
+                    <i class="fab fa-orcid"></i> Login dengan ORCID
+                </button>
+                <button id="magic-btn" class="auth-btn magic">
+                    <i class="fas fa-magic"></i> Login dengan Magic Link
+                </button>
+            </div>
+
+            <div id="email-form" class="form-group">
+                <div class="form-group">
+                    <label for="email"><i class="fas fa-envelope"></i> Email Address</label>
+                    <input type="email" id="email" name="email" placeholder="masukkan email anda" required>
+                </div>
+
+                <button id="send-btn" class="btn">
+                    <span id="send-btn-text">Kirim Magic Link</span>
+                    <span id="send-btn-spinner" class="spinner" style="display: none;"></span>
+                </button>
+            </div>
+
+            <div id="actions-section" class="action-buttons">
+                <h3>Pilihan Aksi:</h3>
+                <div class="action-btn" data-action="publish">
+                    <i class="fas fa-paper-plane"></i> Publish to Zenodo
+                </div>
+                <div class="action-btn" data-action="record">
+                    <i class="fas fa-book"></i> Record Research
+                </div>
+                <div class="action-btn" data-action="claim">
+                    <i class="fas fa-coins"></i> Claim Tokens
+                </div>
+                <div class="action-btn" data-action="logout">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </div>
+            </div>
+            
+            <div class="footer">
+                <p>Sistem Autentikasi ORCID dan Magic Link</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const authOptions = document.getElementById('auth-options');
+            const orcidBtn = document.getElementById('orcid-btn');
+            const magicBtn = document.getElementById('magic-btn');
+            const emailForm = document.getElementById('email-form');
+            const emailInput = document.getElementById('email');
+            const sendBtn = document.getElementById('send-btn');
+            const sendBtnText = document.getElementById('send-btn-text');
+            const sendBtnSpinner = document.getElementById('send-btn-spinner');
+            const messageEl = document.getElementById('message');
+            const actionsSection = document.getElementById('actions-section');
+            const userInfo = document.getElementById('user-info');
+            const userEmail = document.getElementById('user-email');
+            
+            // Base URL for the Edge Function
+            const FUNCTION_URL = 'https://weueopblwiliyjqaaqvb.supabase.co/functions/v1/orcid-magic-link';
+            
+            // Check if we have a token in the URL (magic link callback)
+            const urlParams = new URLSearchParams(window.location.search);
+            const token = urlParams.get('token');
+            const code = urlParams.get('code');
+            const email = urlParams.get('email');
+            
+            // Check if user is already logged in
+            const savedEmail = localStorage.getItem('user_email');
+            const savedAuthToken = localStorage.getItem('auth_token');
+            
+            if (savedEmail && savedAuthToken) {
+                showUserInfo(savedEmail);
+                showActions();
+            } else if (token && email) {
+                // We have a magic link callback, verify the token
+                verifyMagicLinkToken(token, email);
+            } else if (code) {
+                // We have an ORCID callback, handle it
+                handleOrcidCallback(code);
+            }
+            
+            // ORCID Login button
+            orcidBtn.addEventListener('click', async function() {
+                setLoadingState(orcidBtn, null, null, true);
+                hideMessage(messageEl);
+                
+                try {
+                    const response = await fetch(FUNCTION_URL, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            action: 'orcid_login'
+                        })
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (response.ok) {
+                        // Redirect to ORCID OAuth page
+                        window.location.href = result.authorizationUrl;
+                    } else {
+                        showMessage(messageEl, result.message || 'Failed to initiate ORCID login', 'error');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    showMessage(messageEl, 'Network error. Please try again.', 'error');
+                } finally {
+                    setLoadingState(orcidBtn, null, null, false);
+                }
+            });
+            
+            // Magic Link button
+            magicBtn.addEventListener('click', function() {
+                authOptions.style.display = 'none';
+                emailForm.style.display = 'block';
+            });
+            
+            // Handle ORCID callback
+            async function handleOrcidCallback(code) {
+                setLoadingState(orcidBtn, null, null, true);
+                showMessage(messageEl, 'Processing ORCID authentication...', 'success');
+                
+                try {
+                    const response = await fetch(FUNCTION_URL, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            action: 'orcid_callback',
+                            code: code
+                        })
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (response.ok) {
+                        // Save user data to local storage
+                        localStorage.setItem('auth_token', result.userData.access_token);
+                        localStorage.setItem('user_email', `${result.userData.orcid_id}@orcid.org`);
+                        localStorage.setItem('orcid_id', result.userData.orcid_id);
+                        
+                        showMessage(messageEl, 'ORCID authentication successful!', 'success');
+                        showUserInfo(`${result.userData.orcid_id}@orcid.org`);
+                        showActions();
+                        
+                        // Remove code from URL
+                        window.history.replaceState({}, document.title, window.location.pathname);
+                    } else {
+                        showMessage(messageEl, result.message || 'ORCID authentication failed', 'error');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    showMessage(messageEl, 'Network error. Please try again.', 'error');
+                } finally {
+                    setLoadingState(orcidBtn, null, null, false);
+                }
+            }
+            
+            // Send magic link
+            sendBtn.addEventListener('click', async function() {
+                const email = emailInput.value.trim();
+                
+                if (!email || !isValidEmail(email)) {
+                    showMessage(messageEl, 'Masukkan alamat email yang valid', 'error');
+                    return;
+                }
+                
+                setLoadingState(sendBtn, sendBtnText, sendBtnSpinner, true);
+                hideMessage(messageEl);
+                
+                try {
+                    const response = await fetch(FUNCTION_URL, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            action: 'send_magic_link',
+                            email: email
+                        })
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (response.ok) {
+                        showMessage(messageEl, 'Magic link telah dikirim ke email Anda!', 'success');
+                    } else {
+                        showMessage(messageEl, result.message || 'Gagal mengirim magic link', 'error');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    showMessage(messageEl, 'Network error. Please try again.', 'error');
+                } finally {
+                    setLoadingState(sendBtn, sendBtnText, sendBtnSpinner, false);
+                }
+            });
+            
+            // Verify magic link token
+            async function verifyMagicLinkToken(token, email) {
+                setLoadingState(sendBtn, sendBtnText, sendBtnSpinner, true);
+                showMessage(messageEl, 'Memverifikasi magic link...', 'success');
+                
+                try {
+                    // In a real implementation, you would verify the token with your backend
+                    // For now, we'll simulate a successful verification
+                    setTimeout(() => {
+                        // Save auth token to local storage
+                        localStorage.setItem('auth_token', token);
+                        localStorage.setItem('user_email', email);
+                        
+                        showMessage(messageEl, 'Authentication successful!', 'success');
+                        showUserInfo(email);
+                        showActions();
+                        
+                        // Remove token from URL
+                        window.history.replaceState({}, document.title, window.location.pathname);
+                        
+                        setLoadingState(sendBtn, sendBtnText, sendBtnSpinner, false);
+                    }, 1500);
+                    
+                } catch (error) {
+                    console.error('Error:', error);
+                    showMessage(messageEl, 'Network error. Please try again.', 'error');
+                    setLoadingState(sendBtn, sendBtnText, sendBtnSpinner, false);
+                }
+            }
+            
+            // Show user info after authentication
+            function showUserInfo(email) {
+                userInfo.style.display = 'block';
+                userEmail.textContent = email;
+                authOptions.style.display = 'none';
+                emailForm.style.display = 'none';
+            }
+            
+            // Show actions after authentication
+            function showActions() {
+                actionsSection.style.display = 'grid';
+            }
+            
+            // Handle action buttons
+            document.querySelectorAll('.action-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const action = this.getAttribute('data-action');
+                    
+                    if (action === 'logout') {
+                        logout();
+                    } else {
+                        performAction(action);
+                    }
+                });
+            });
+            
+            // Perform action
+            async function performAction(action) {
+                const authToken = localStorage.getItem('auth_token');
+                const userEmail = localStorage.getItem('user_email');
+                
+                if (!authToken) {
+                    showMessage(messageEl, 'Silakan login terlebih dahulu', 'error');
+                    return;
+                }
+                
+                setLoadingState(sendBtn, sendBtnText, sendBtnSpinner, true);
+                showMessage(messageEl, `Memproses ${action}...`, 'success');
+                
+                try {
+                    // Simulasi pemrosesan aksi
+                    setTimeout(() => {
+                        showMessage(messageEl, `Aksi ${action} berhasil dilakukan!`, 'success');
+                        setLoadingState(sendBtn, sendBtnText, sendBtnSpinner, false);
+                    }, 1500);
+                    
+                } catch (error) {
+                    console.error('Error:', error);
+                    showMessage(messageEl, `Gagal melakukan aksi ${action}`, 'error');
+                    setLoadingState(sendBtn, sendBtnText, sendBtnSpinner, false);
+                }
+            }
+            
+            // Logout function
+            function logout() {
+                localStorage.removeItem('auth_token');
+                localStorage.removeItem('user_email');
+                localStorage.removeItem('orcid_id');
+                
+                userInfo.style.display = 'none';
+                actionsSection.style.display = 'none';
+                authOptions.style.display = 'flex';
+                emailForm.style.display = 'none';
+                
+                emailInput.value = '';
+                showMessage(messageEl, 'Anda telah logout', 'success');
+            }
+            
+            // Helper functions
+            function setLoadingState(button, buttonText, spinner, isLoading) {
+                if (isLoading) {
+                    if (button) button.disabled = true;
+                    if (buttonText) buttonText.textContent = 'Memproses...';
+                    if (spinner) spinner.style.display = 'inline-block';
+                } else {
+                    if (button) button.disabled = false;
+                    if (buttonText) buttonText.textContent = buttonText.dataset.originalText || buttonText.textContent;
+                    if (spinner) spinner.style.display = 'none';
+                }
+            }
+            
+            function showMessage(element, message, type) {
+                element.textContent = message;
+                element.className = `message ${type}`;
+                element.style.display = 'block';
+            }
+            
+            function hideMessage(element) {
+                element.style.display = 'none';
+            }
+            
+            function isValidEmail(email) {
+                const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return re.test(email);
+            }
+            
+            // Store original button text
+            sendBtnText.dataset.originalText = sendBtnText.textContent;
+        });
+    </script>
+</body>
+</html>
