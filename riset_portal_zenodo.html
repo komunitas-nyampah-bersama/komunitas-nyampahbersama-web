@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research Publication Portal</title>
+    <style>
+        /* CSS yang sama seperti sebelumnya */
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary: #7209b7;
+            --success: #4cc9f0;
+            --error: #e63946;
+            --background: #f8f9fa;
+            --text: #212529;
+            --text-light: #6c757d;
+            --border: #dee2e6;
+            --white: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 25px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .tabs {
+            display: flex;
+            background: #f1f3f5;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .tab {
+            padding: 15px 20px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab.active {
+            border-bottom: 3px solid var(--primary);
+            background: var(--white);
+            color: var(--primary);
+        }
+
+        .tab-content {
+            display: none;
+            padding: 30px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text);
+            font-size: 14px;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 15px;
+            transition: all 0.3s;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.15);
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .btn {
+            padding: 14px 20px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .message {
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            display: none;
+            font-size: 14px;
+        }
+
+        .message.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .result-box {
+            background: #f8f9fa;
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 20px;
+            font-family: monospace;
+            font-size: 14px;
+            white-space: pre-wrap;
+            display: none;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .tab {
+                border-bottom: 1px solid var(--border);
+                border-left: 3px solid transparent;
+            }
+            
+            .tab.active {
+                border-bottom: 1px solid var(--border);
+                border-left: 3px solid var(--primary);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Research Publication Portal</h1>
+            <p>Publish research to Zenodo, record contributions, and claim tokens</p>
+        </div>
+
+        <div class="tabs">
+            <div class="tab active" data-tab="publish">Publish to Zenodo</div>
+            <div class="tab" data-tab="record">Record Research</div>
+            <div class="tab" data-tab="claim">Claim Tokens</div>
+        </div>
+
+        <div class="tab-content active" id="publish-tab">
+            <h2>Publish Research to Zenodo</h2>
+            <div id="publish-message" class="message"></div>
+            
+            <form id="publish-form">
+                <div class="form-group">
+                    <label for="title">Research Title *</label>
+                    <input type="text" id="title" name="title" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Description *</label>
+                    <textarea id="description" name="description" required></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="fileUrl">File URL</label>
+                        <input type="url" id="fileUrl" name="fileUrl" placeholder="https://example.com/research.pdf">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fileName">File Name</label>
+                        <input type="text" id="fileName" name="fileName" placeholder="research.pdf">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="access_right">Access Right</label>
+                        <select id="access_right" name="access_right">
+                            <option value="open">Open Access</option>
+                            <option value="embargoed">Embargoed</option>
+                            <option value="restricted">Restricted</option>
+                            <option value="closed">Closed</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="license">License</label>
+                        <select id="license" name="license">
+                            <option value="cc-by">CC BY</option>
+                            <option value="cc-by-sa">CC BY-SA</option>
+                            <option value="cc-by-nc">CC BY-NC</option>
+                            <option value="cc0">CC0</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit" id="publish-btn" class="btn">
+                    <span id="publish-btn-text">Publish to Zenodo</span>
+                    <span id="publish-btn-spinner" class="spinner" style="display: none;"></span>
+                </button>
+            </form>
+
+            <div id="publish-result" class="result-box"></div>
+        </div>
+
+        <div class="tab-content" id="record-tab">
+            <h2>Record Research Contribution</h2>
+            <div id="record-message" class="message"></div>
+            
+            <form id="record-form">
+                <div class="form-group">
+                    <label for="orcid">ORCID iD *</label>
+                    <input type="text" id="orcid" name="orcid" required placeholder="0000-0000-0000-0000">
+                </div>
+
+                <div class="form-group">
+                    <label for="doi">DOI *</label>
+                    <input type="text" id="doi" name="doi" required placeholder="10.1234/zenodo.1234567">
+                </div>
+
+                <button type="submit" id="record-btn" class="btn">
+                    <span id="record-btn-text">Record Contribution</span>
+                    <span id="record-btn-spinner" class="spinner" style="display: none;"></span>
+                </button>
+            </form>
+
+            <div id="record-result" class="result-box"></div>
+        </div>
+
+        <div class="tab-content" id="claim-tab">
+            <h2>Claim Research Tokens</h2>
+            <div id="claim-message" class="message"></div>
+            
+            <form id="claim-form">
+                <div class="form-group">
+                    <label for="wallet">Wallet Address *</label>
+                    <input type="text" id="wallet" name="wallet" required placeholder="0x...">
+                </div>
+
+                <div class="form-group">
+                    <label for="claim-orcid">ORCID iD *</label>
+                    <input type="text" id="claim-orcid" name="orcid" required placeholder="0000-0000-0000-0000">
+                </div>
+
+                <button type="submit" id="claim-btn" class="btn">
+                    <span id="claim-btn-text">Claim Tokens</span>
+                    <span id="claim-btn-spinner" class="spinner" style="display: none;"></span>
+                </button>
+            </form>
+
+            <div id="claim-result" class="result-box"></div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tab navigation
+            const tabs = document.querySelectorAll('.tab');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const tabId = tab.getAttribute('data-tab');
+                    
+                    // Update active tab
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tabContents.forEach(tc => tc.classList.remove('active'));
+                    
+                    tab.classList.add('active');
+                    document.getElementById(`${tabId}-tab`).classList.add('active');
+                });
+            });
+            
+            // Base URL for the Supabase function
+            const FUNCTION_URL = 'https://weueopblwiliyjqaaqvb.supabase.co/functions/v1/super-task';
+            
+            // Publish to Zenodo form
+            const publishForm = document.getElementById('publish-form');
+            const publishBtn = document.getElementById('publish-btn');
+            const publishBtnText = document.getElementById('publish-btn-text');
+            const publishBtnSpinner = document.getElementById('publish-btn-spinner');
+            const publishMessage = document.getElementById('publish-message');
+            const publishResult = document.getElementById('publish-result');
+            
+            publishForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const formData = new FormData(publishForm);
+                const data = {
+                    action: 'publish_to_zenodo',
+                    title: formData.get('title'),
+                    description: formData.get('description'),
+                    fileUrl: formData.get('fileUrl'),
+                    fileName: formData.get('fileName'),
+                    access_right: formData.get('access_right'),
+                    license: formData.get('license')
+                };
+                
+                // Validate required fields
+                if (!data.title || !data.description) {
+                    showMessage(publishMessage, 'Title and description are required', 'error');
+                    return;
+                }
+                
+                setLoadingState(publishBtn, publishBtnText, publishBtnSpinner, true);
+                hideMessage(publishMessage);
+                hideElement(publishResult);
+                
+                try {
+                    const response = await fetch(FUNCTION_URL, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(data)
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (response.ok) {
+                        showMessage(publishMessage, 'Publication successful!', 'success');
+                        showResult(publishResult, result);
+                    } else {
+                        showMessage(publishMessage, result.message || 'Publication failed', 'error');
+                        showResult(publishResult, result);
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    showMessage(publishMessage, 'Network error. Please try again.', 'error');
+                } finally {
+                    setLoadingState(publishBtn, publishBtnText, publishBtnSpinner, false);
+                }
+            });
+            
+            // Record research form
+            const recordForm = document.getElementById('record-form');
+            const recordBtn = document.getElementById('record-btn');
+            const recordBtnText = document.getElementById('record-btn-text');
+            const recordBtnSpinner = document.getElementById('record-btn-spinner');
+            const recordMessage = document.getElementById('record-message');
+            const recordResult = document.getElementById('record-result');
+            
+            recordForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const formData = new FormData(recordForm);
+                const data = {
+                    action: 'record_research',
+                    orcid: formData.get('orcid'),
+                    doi: formData.get('doi')
+                };
+                
+                // Validate required fields
+                if (!data.orcid || !data.doi) {
+                    showMessage(recordMessage, 'ORCID and DOI are required', 'error');
+                    return;
+                }
+                
+                setLoadingState(recordBtn, recordBtnText, recordBtnSpinner, true);
+                hideMessage(recordMessage);
+                hideElement(recordResult);
+                
+                try {
+                    const response = await fetch(FUNCTION_URL, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(data)
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (response.ok) {
+                        showMessage(recordMessage, 'Research contribution recorded successfully!', 'success');
+                        showResult(recordResult, result);
+                    } else {
+                        showMessage(recordMessage, result.message || 'Failed to record research', 'error');
+                        showResult(recordResult, result);
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    showMessage(recordMessage, 'Network error. Please try again.', 'error');
+                } finally {
+                    setLoadingState(recordBtn, recordBtnText, recordBtnSpinner, false);
+                }
+            });
+            
+            // Claim tokens form
+            const claimForm = document.getElementById('claim-form');
+            const claimBtn = document.getElementById('claim-btn');
+            const claimBtnText = document.getElementById('claim-btn-text');
+            const claimBtnSpinner = document.getElementById('claim-btn-spinner');
+            const claimMessage = document.getElementById('claim-message');
+            const claimResult = document.getElementById('claim-result');
+            
+            claimForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const formData = new FormData(claimForm);
+                const data = {
+                    action: 'claim_research_tokens',
+                    wallet: formData.get('wallet'),
+                    orcid: formData.get('orcid')
+                };
+                
+                // Validate required fields
+                if (!data.wallet || !data.orcid) {
+                    showMessage(claimMessage, 'Wallet address and ORCID are required', 'error');
+                    return;
+                }
+                
+                setLoadingState(claimBtn, claimBtnText, claimBtnSpinner, true);
+                hideMessage(claimMessage);
+                hideElement(claimResult);
+                
+                try {
+                    const response = await fetch(FUNCTION_URL, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(data)
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (response.ok) {
+                        showMessage(claimMessage, 'Tokens claimed successfully!', 'success');
+                        showResult(claimResult, result);
+                    } else {
+                        showMessage(claimMessage, result.message || 'Failed to claim tokens', 'error');
+                        showResult(claimResult, result);
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    showMessage(claimMessage, 'Network error. Please try again.', 'error');
+                } finally {
+                    setLoadingState(claimBtn, claimBtnText, claimBtnSpinner, false);
+                }
+            });
+            
+            // Helper functions
+            function setLoadingState(button, buttonText, spinner, isLoading) {
+                if (isLoading) {
+                    button.disabled = true;
+                    buttonText.textContent = 'Processing...';
+                    spinner.style.display = 'inline-block';
+                } else {
+                    button.disabled = false;
+                    buttonText.textContent = buttonText.dataset.originalText || buttonText.textContent;
+                    spinner.style.display = 'none';
+                }
+            }
+            
+            function showMessage(element, message, type) {
+                element.textContent = message;
+                element.className = `message ${type}`;
+                element.style.display = 'block';
+            }
+            
+            function hideMessage(element) {
+                element.style.display = 'none';
+            }
+            
+            function showResult(element, data) {
+                element.textContent = JSON.stringify(data, null, 2);
+                element.style.display = 'block';
+            }
+            
+            function hideElement(element) {
+                element.style.display = 'none';
+            }
+            
+            // Store original button text
+            document.querySelectorAll('#publish-btn-text, #record-btn-text, #claim-btn-text').forEach(el => {
+                el.dataset.originalText = el.textContent;
+            });
+        });
+    </script>
+</body>
+</html>
