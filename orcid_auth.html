@@ -274,7 +274,7 @@
             }
             
             .header h1 {
-                fontSize: 24px;
+                font-size: 24px;
             }
             
             .content {
@@ -364,10 +364,16 @@
             const token = urlParams.get('token');
             const code = urlParams.get('code');
             const email = urlParams.get('email');
+            const error = urlParams.get('error');
             
             // Check if user is already logged in
             const savedEmail = localStorage.getItem('user_email');
             const savedAuthToken = localStorage.getItem('auth_token');
+            
+            // Show error message if any
+            if (error) {
+                showMessage(messageEl, `Error: ${error}`, 'error');
+            }
             
             if (savedEmail && savedAuthToken) {
                 showUserInfo(savedEmail);
@@ -421,7 +427,7 @@
             // Handle ORCID callback
             async function handleOrcidCallback(code) {
                 setLoadingState(orcidBtn, null, null, true);
-                showMessage(messageEl, 'Processing ORCID authentication...', 'success');
+                showMessage(messageEl, 'Memproses autentikasi ORCID...', 'success');
                 
                 try {
                     const response = await fetch(FUNCTION_URL, {
@@ -443,14 +449,14 @@
                         localStorage.setItem('user_email', `${result.userData.orcid_id}@orcid.org`);
                         localStorage.setItem('orcid_id', result.userData.orcid_id);
                         
-                        showMessage(messageEl, 'ORCID authentication successful!', 'success');
+                        showMessage(messageEl, 'Autentikasi ORCID berhasil!', 'success');
                         showUserInfo(`${result.userData.orcid_id}@orcid.org`);
                         showActions();
                         
                         // Remove code from URL
                         window.history.replaceState({}, document.title, window.location.pathname);
                     } else {
-                        showMessage(messageEl, result.message || 'ORCID authentication failed', 'error');
+                        showMessage(messageEl, result.message || 'Autentikasi ORCID gagal', 'error');
                     }
                 } catch (error) {
                     console.error('Error:', error);
@@ -512,7 +518,7 @@
                         localStorage.setItem('auth_token', token);
                         localStorage.setItem('user_email', email);
                         
-                        showMessage(messageEl, 'Authentication successful!', 'success');
+                        showMessage(messageEl, 'Autentikasi berhasil!', 'success');
                         showUserInfo(email);
                         showActions();
                         
