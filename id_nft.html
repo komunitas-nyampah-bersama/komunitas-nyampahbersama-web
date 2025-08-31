@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soulbond Community ID</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- Thirdweb SDK -->
+    <script type="module">
+        import { createThirdwebClient } from "https://cdn.jsdelivr.net/npm/thirdweb@0.2.10/dist/client.esm.js";
+        import { ConnectButton, useActiveAccount } from "https://cdn.jsdelivr.net/npm/thirdweb@0.2.10/react.esm.js";
+        import { ThirdwebProvider } from "https://cdn.jsdelivr.net/npm/thirdweb@0.2.10/react.esm.js";
+
+        // Ekspor fungsi ke global scope agar dapat diakses di script biasa
+        window.thirdweb = {
+            createThirdwebClient,
+            ConnectButton,
+            useActiveAccount,
+            ThirdwebProvider
+        };
+    </script>
+    <style>
+        :root {
+            --primary-blue: #1a365d;
+            --accent-blue: #2a4a7c;
+            --light-blue: #e1eaf5;
+            --gold: #d4af37;
+            --light-gold: #f8f0d9;
+            --dark-text: #2d3748;
+            --light-text: #f8f9fa;
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: var(--dark-text);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--accent-blue) 100%);
+            color: var(--light-text);
+            padding: 20px 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo {
+            height: 70px;
+            width: auto;
+        }
+        
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: 700;
+            line-height: 1.2;
+            text-transform: uppercase;
+        }
+        
+        /* Navigation */
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+        
+        nav a {
+            color: var(--light-text);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            padding: 5px 10px;
+            border-radius: 4px;
+        }
+        
+        nav a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(26, 54, 93, 0.8), rgba(26, 54, 93, 0.9)), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect fill="%231a365d" width="100" height="100"/><path fill="%232a4a7c" d="M0 0L100 100M100 0L0 100" stroke-width="0.5"/></svg>');
+            color: var(--light-text);
+            padding: 80px 0;
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 2.8rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto 30px;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background-color: var(--gold);
+            color: var(--primary-blue);
+            padding: 12px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: var(--transition);
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+            margin: 0 10px;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+        }
+        
+        /* Features Section */
+        .features {
+            padding: 80px 0;
+            background-color: white;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 2.2rem;
+            color: var(--primary-blue);
+            margin-bottom: 50px;
+            position: relative;
+        }
+        
+        .section-title:after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background-color: var(--gold);
+            margin: 15px auto;
+            border-radius: 2px;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .feature-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: var(--transition);
+            text-align: center;
+            padding: 30px 20px;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.12);
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            color: var(--gold);
+            margin-bottom: 20px;
+        }
+        
+        .feature-title {
+            font-size: 1.4rem;
+            color: var(--primary-blue);
+            margin-bottom: 15px;
+        }
+        
+        /* Community ID Section */
+        .community-id {
+            padding: 80px 0;
+            background-color: var(--light-blue);
+        }
+        
+        .id-form-container {
+            background-color: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--accent-blue);
+        }
+        
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            background-color: var(--light-blue);
+            color: var(--dark-text);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 3px rgba(42, 74, 124, 0.2);
+        }
+        
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .submit-btn {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--accent-blue) 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: block;
+            width: 100%;
+            margin-top: 20px;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(26, 54, 93, 0.3);
+        }
+        
+        .submit-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        /* Loading spinner */
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Preview Section */
+        .preview-section {
+            padding: 40px 0;
+            text-align: center;
+        }
+        
+        .id-preview {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--accent-blue) 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            max-width: 400px;
+            margin: 0 auto;
+            display: none;
+        }
+        
+        .id-preview h3 {
+            margin-bottom: 20px;
+            color: var(--gold);
+        }
+        
+        .id-details {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+        
+        .id-detail {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .download-btn {
+            display: inline-block;
+            background-color: var(--gold);
+            color: var(--primary-blue);
+            padding: 10px 20px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: var(--transition);
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+            margin-top: 15px;
+            cursor: pointer;
+            border: none;
+        }
+        
+        .download-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--primary-blue);
+            color: var(--light-text);
+            padding: 60px 0 30px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--gold);
+        }
+        
+        .footer-contact h3 {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            color: var(--gold);
+        }
+        
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .contact-icon {
+            color: var(--gold);
+            font-size: 1.2rem;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        /* Share Section */
+        .share-section {
+            padding: 20px 0;
+            text-align: center;
+            display: none;
+        }
+        
+        .share-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .share-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--primary-blue);
+            color: white;
+            font-size: 1.5rem;
+            transition: var(--transition);
+            text-decoration: none;
+        }
+        
+        .share-button:hover {
+            transform: translateY(-3px);
+            background-color: var(--accent-blue);
+        }
+        
+        /* Alert Messages */
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .alert-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        /* Wallet Connect Section */
+        .wallet-section {
+            padding: 60px 0;
+            background-color: var(--light-gold);
+            text-align: center;
+        }
+        
+        .wallet-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 30px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+        
+        .claim-button {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--accent-blue) 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 20px;
+        }
+        
+        .claim-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(26, 54, 93, 0.3);
+        }
+        
+        .claim-button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+        
+        /* Thirdweb Connect Button Customization */
+        .thirdweb-connect-button {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--accent-blue) 100%) !important;
+            color: white !important;
+            border-radius: 50px !important;
+            padding: 12px 24px !important;
+            font-weight: 700 !important;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            nav ul {
+                gap: 15px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .id-form-container {
+                padding: 20px;
+            }
+            
+            .share-buttons {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo-container">
+                    <i class="fas fa-users logo" style="font-size: 2.5rem; color: var(--gold);"></i>
+                    <div class="logo-text">Soulbond Community</div>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="#"><i class="fas fa-home"></i> Home</a></li>
+                        <li><a href="#community-form"><i class="fas fa-id-card"></i> Buat ID</a></li>
+                        <li><a href="#wallet-section"><i class="fas fa-wallet"></i> Klaim Hadiah</a></li>
+                        <li><a href="#"><i class="fas fa-question-circle"></i> Bantuan</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>Buat ID Komunitas Soulbond Anda</h1>
+            <p>Tanpa perlu memahami blockchain, buat identitas digital unik untuk komunitas Anda dalam hitungan menit</p>
+            <a href="#community-form" class="cta-button"><i class="fas fa-plus-circle"></i> Buat Sekarang</a>
+            <a href="#wallet-section" class="cta-button" style="background-color: transparent; border: 2px solid var(--gold);"><i class="fas fa-gift"></i> Klaim Hadiah</a>
+        </div>
+    </section>
+
+    <section id="features" class="features">
+        <div class="container">
+            <h2 class="section-title">Mengapa Soulbond Community ID?</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3 class="feature-title">Mudah Digunakan</h3>
+                    <p>Tidak perlu pengetahuan teknis tentang blockchain atau cryptocurrency</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="feature-title">Aman dan Terpercaya</h3>
+                    <p>Teknologi blockchain menjamin keaslian dan keamanan ID komunitas Anda</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-image"></i>
+                    </div>
+                    <h3 class="feature-title">Bagikan di Media Sosial</h3>
+                    <p>Download kartu ID sebagai gambar untuk dibagikan di platform sosial</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="community-form" class="community-id">
+        <div class="container">
+            <h2 class="section-title">Buat ID Komunitas Anda</h2>
+            <div class="id-form-container">
+                <div id="success-alert" class="alert alert-success">
+                    <i class="fas fa-check-circle"></i> ID Komunitas berhasil dibuat dan data telah dikirim ke sistem!
+                </div>
+                <div id="error-alert" class="alert alert-error">
+                    <i class="fas fa-exclamation-circle"></i> Terjadi kesalahan. Silakan coba lagi nanti.
+                </div>
+                
+                <form id="communityForm">
+                    <div class="form-group">
+                        <label for="communityName"><i class="fas fa-users"></i> Nama Komunitas</label>
+                        <input type="text" id="communityName" placeholder="Contoh: Komunitas Seniman Jakarta" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="communityCategory"><i class="fas fa-tag"></i> Kategori</label>
+                        <select id="communityCategory" required>
+                            <option value="">Pilih kategori...</option>
+                            <option value="seni">Seni & Budaya</option>
+                            <option value="edukasi">Edukasi</option>
+                            <option value="teknologi">Teknologi</option>
+                            <option value="olahraga">Olahraga</option>
+                            <option value="social">Social & Kemanusiaan</option>
+                            <option value="lainnya">Lainnya</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="communityDescription"><i class="fas fa-align-left"></i> Deskripsi Komunitas</label>
+                        <textarea id="communityDescription" placeholder="Jelaskan visi, misi, dan aktivitas komunitas Anda..." required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="communityAddress"><i class="fas fa-map-marker-alt"></i> Alamat Komunitas</label>
+                        <textarea id="communityAddress" placeholder="Alamat lengkap komunitas..." required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="communityWebsite"><i class="fas fa-globe"></i> Website (opsional)</label>
+                        <input type="url" id="communityWebsite" placeholder="https://....">
+                    </div>
+                    <div class="form-group">
+                        <label for="communityEmail"><i class="fas fa-envelope"></i> Email Kontak</label>
+                        <input type="email" id="communityEmail" placeholder="komunitas@example.com" required>
+                    </div>
+                    <button type="submit" class="submit-btn" id="submit-button">
+                        <i class="fas fa-id-card"></i> Buat ID Komunitas
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <section class="preview-section">
+        <div class="container">
+            <div id="id-preview" class="id-preview">
+                <h3><i class="fas fa-id-card"></i> ID Komunitas Soulbond</h3>
+                <div class="id-details">
+                    <div class="id-detail">
+                        <span>Nama Komunitas:</span>
+                        <span id="preview-name">-</span>
+                    </div>
+                    <div class="id-detail">
+                        <span>Kategori:</span>
+                        <span id="preview-category">-</span>
+                    </div>
+                    <div class="id-detail">
+                        <span>ID Number:</span>
+                        <span id="preview-id">SB-XXXX-XXXX</span>
+                    </div>
+                    <div class="id-detail">
+                        <span>Status:</span>
+                        <span style="color: var(--gold);">Terverifikasi</span>
+                    </div>
+                </div>
+                <button id="download-btn" class="download-btn"><i class="fas fa-download"></i> Download sebagai Gambar</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="wallet-section" class="wallet-section">
+        <div class="container">
+            <h2 class="section-title">Klaim Hadiah Komunitas Anda</h2>
+            <div class="wallet-container">
+                <p>Sambungkan dompet Anda untuk menerima hadiah khusus sebagai anggota komunitas Soulbond!</p>
+                
+                <div id="thirdweb-connect"></div>
+                <div id="claim-container" style="display: none; margin-top: 20px;">
+                    <button id="claim-button" class="claim-button">
+                        <i class="fas fa-gift"></i> Klaim Hadiah Saya
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="share-section" class="share-section">
+        <div class="container">
+            <h3>Bagikan ID Komunitas Anda</h3>
+            <p>Promosikan komunitas Anda dengan membagikan ID Soulbond di media sosial</p>
+            <div class="share-buttons">
+                <a href="#" class="share-button" id="share-twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="share-button" id="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="share-button" id="share-instagram"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="share-button" id="share-linkedin"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#" class="share-button" id="share-whatsapp"><i class="fab fa-whatsapp"></i></a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-about">
+                    <div class="footer-logo">Soulbond Community</div>
+                    <p>Membantu komunitas membuat identitas digital mereka dengan teknologi blockchain tanpa kerumitan teknis.</p>
+                </div>
+                <div class="footer-contact">
+                    <h3>Kontak Kami</h3>
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <i class="fas fa-envelope contact-icon"></i>
+                            <span>info@soulbond.id</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-globe contact-icon"></i>
+                            <span>www.soulbond.id</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h3>Tautan Cepat</h3>
+                    <div class="contact-info">
+                        <a href="#" class="contact-item">
+                            <i class="fas fa-question-circle contact-icon"></i>
+                            <span>Panduan Penggunaan</span>
+                        </a>
+                        <a href="#" class="contact-item">
+                            <i class="fas fa-file-alt contact-icon"></i>
+                            <span>Syarat & Ketentuan</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="copyright">
+                &copy; 2023 Soulbond Community ID. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Konstanta untuk API endpoint
+        const SUPABASE_FUNCTION_URL = 'https://weueopblwiliyjqaaqvb.supabase.co/functions/v1/swift-api';
+        const BEARER_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndldWVvcGJsd2lsaXlqcWFhcXZiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE0NzExNzUsImV4cCI6MjA2NzA0NzE3NX0.O_hQFoLpRoRqa7je2PwavqiGrc4f9PP_UKd7iG9K8Xg';
+        
+        document.getElementById('communityForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Tampilkan loading state
+            const submitButton = document.getElementById('submit-button');
+            const originalText = submitButton.innerHTML;
+            submitButton.innerHTML = '<span class="spinner"></span> Membuat ID...';
+            submitButton.disabled = true;
+            
+            // Sembunyikan alert sebelumnya
+            document.getElementById('success-alert').style.display = 'none';
+            document.getElementById('error-alert').style.display = 'none';
+            
+            // Get form values
+            const name = document.getElementById('communityName').value;
+            const category = document.getElementById('communityCategory').value;
+            const description = document.getElementById('communityDescription').value;
+            const address = document.getElementById('communityAddress').value;
+            const website = document.getElementById('communityWebsite').value;
+            const email = document.getElementById('communityEmail').value;
+            
+            // Generate a mock ID
+            const idNumber = 'SB-' + Math.floor(1000 + Math.random() * 9000) + '-' + Math.floor(1000 + Math.random() * 9000);
+            
+            try {
+                // Kirim data ke Supabase Function
+                const response = await fetch(SUPABASE_FUNCTION_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${BEARER_TOKEN}`
+                    },
+                    body: JSON.stringify({
+                        name: name,
+                        category: category,
+                        description: description,
+                        address: address,
+                        website: website,
+                        email: email,
+                        communityId: idNumber,
+                        timestamp: new Date().toISOString()
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const result = await response.json();
+                console.log('Success:', result);
+                
+                // Tampilkan alert sukses
+                document.getElementById('success-alert').style.display = 'block';
+                
+                // Update preview
+                document.getElementById('preview-name').textContent = name;
+                document.getElementById('preview-category').textContent = document.getElementById('communityCategory').options[document.getElementById('communityCategory').selectedIndex].text;
+                document.getElementById('preview-id').textContent = idNumber;
+                
+                // Show preview and share section
+                document.getElementById('id-preview').style.display = 'block';
+                document.getElementById('share-section').style.display = 'block';
+                
+                // Scroll to preview
+                document.getElementById('id-preview').scrollIntoView({ behavior: 'smooth' });
+                
+                // Update share links
+                updateShareLinks();
+                
+            } catch (error) {
+                console.error('Error:', error);
+                // Tampilkan alert error
+                document.getElementById('error-alert').style.display = 'block';
+            } finally {
+                // Kembalikan state tombol ke semula
+                submitButton.innerHTML = originalText;
+                submitButton.disabled = false;
+            }
+        });
+
+        // Add real-time preview as user types
+        document.getElementById('communityName').addEventListener('input', function() {
+            document.getElementById('preview-name').textContent = this.value || '-';
+        });
+
+        document.getElementById('communityCategory').addEventListener('change', function() {
+            if (this.value) {
+                document.getElementById('preview-category').textContent = this.options[this.selectedIndex].text;
+            } else {
+                document.getElementById('preview-category').textContent = '-';
+            }
+        });
+
+        // Download as PNG functionality
+        document.getElementById('download-btn').addEventListener('click', function() {
+            // Use html2canvas to convert the preview to an image
+            html2canvas(document.getElementById('id-preview')).then(function(canvas) {
+                // Convert canvas to data URL
+                const imageData = canvas.toDataURL('image/png');
+                
+                // Create a temporary link for downloading
+                const link = document.createElement('a');
+                link.href = imageData;
+                link.download = 'soulbond-community-id.png';
+                
+                // Trigger download
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            });
+        });
+
+        // Update share links with current URL and text
+        function updateShareLinks() {
+            const name = document.getElementById('communityName').value || 'Komunitas Saya';
+            const id = document.getElementById('preview-id').textContent || 'SB-XXXX-XXXX';
+            const text = `Lihat ID Soulbond komunitas saya: ${name} (${id})`;
+            const url = window.location.href;
+            
+            // Encode text for share URLs
+            const encodedText = encodeURIComponent(text);
+            const encodedUrl = encodeURIComponent(url);
+            
+            // Update share buttons
+            document.getElementById('share-twitter').href = `https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}`;
+            document.getElementById('share-facebook').href = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}&quote=${encodedText}`;
+            document.getElementById('share-linkedin').href = `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`;
+            document.getElementById('share-whatsapp').href = `https://wa.me/?text=${encodedText}%20${encodedUrl}`;
+            
+            // Instagram doesn't support direct sharing, so we'll just open the app
+            document.getElementById('share-instagram').href = `instagram://app`;
+        }
+
+        // Update share links when form changes
+        document.getElementById('communityForm').addEventListener('input', updateShareLinks);
+
+        // Thirdweb Integration
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Tunggu hingga Thirdweb SDK dimuat
+            if (!window.thirdweb) {
+                console.error('Thirdweb SDK not loaded');
+                return;
+            }
+
+            const { createThirdwebClient, ConnectButton, useActiveAccount, ThirdwebProvider } = window.thirdweb;
+            
+            // Buat Thirdweb client
+            const client = createThirdwebClient({
+                clientId: "your-client-id", // Ganti dengan client ID Thirdweb Anda
+            });
+            
+            // Render ConnectButton
+            const connectContainer = document.getElementById('thirdweb-connect');
+            const claimContainer = document.getElementById('claim-container');
+            const claimButton = document.getElementById('claim-button');
+            
+            // Function untuk menangani klaim hadiah
+            const handleClaim = async () => {
+                const account = useActiveAccount();
+                const address = account?.address;
+                
+                if (!address) {
+                    alert('Silakan sambungkan dompet Anda terlebih dahulu!');
+                    return;
+                }
+                
+                claimButton.innerHTML = '<span class="spinner"></span> Mengklaim...';
+                claimButton.disabled = true;
+                
+                try {
+                    // Kirim permintaan klaim ke API
+                    const response = await fetch("/api/claim", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({ address }),
+                    });
+                    
+                    if (response.ok) {
+                        alert(`🎉 Hadiah telah dikirim ke dompet Anda: ${address}`);
+                    } else {
+                        throw new Error('Gagal mengklaim hadiah');
+                    }
+                } catch (error) {
+                    console.error('Error claiming reward:', error);
+                    alert('Terjadi kesalahan saat mengklaim hadiah. Silakan coba lagi.');
+                } finally {
+                    claimButton.innerHTML = '<i class="fas fa-gift"></i> Klaim Hadiah Saya';
+                    claimButton.disabled = false;
+                }
+            };
+            
+            // Tambahkan event listener ke tombol klaim
+            claimButton.addEventListener('click', handleClaim);
+            
+            // Render ConnectButton menggunakan Thirdweb
+            // Catatan: Ini adalah pendekatan sederhana, dalam implementasi nyata
+            // Anda mungkin perlu menggunakan React atau pendekatan yang lebih canggih
+            const connectButton = ConnectButton({
+                client: client,
+                appMetadata: {
+                    name: "Soulbond Community",
+                    url: window.location.href,
+                },
+            });
+            
+            // Tambahkan ConnectButton ke DOM
+            connectContainer.appendChild(connectButton);
+            
+            // Periksa status koneksi secara berkala
+            setInterval(() => {
+                const account = useActiveAccount();
+                if (account && account.address) {
+                    claimContainer.style.display = 'block';
+                } else {
+                    claimContainer.style.display = 'none';
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
