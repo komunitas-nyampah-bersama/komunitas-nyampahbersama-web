@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AppKit Wallet Integration with Glide Webhook</title>
+    <style>
+        :root {
+            --primary-color: #8b5cf6;
+            --primary-dark: #7c3aed;
+            --background-dark: #0f172a;
+            --card-bg: #1e293b;
+            --text-light: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--background-dark);
+            color: var(--text-light);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        header {
+            margin-bottom: 40px;
+        }
+        
+        .logo {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            background: linear-gradient(145deg, var(--primary-color), var(--primary-dark));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 24px rgba(167, 38, 169, 0.66);
+        }
+        
+        .logo svg {
+            width: 60px;
+            height: 60px;
+            fill: white;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+        
+        .highlight {
+            color: var(--primary-color);
+        }
+        
+        .subtitle {
+            color: var(--text-muted);
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+        
+        .wallet-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .wallet-btn {
+            background: linear-gradient(145deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .wallet-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .wallet-info {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+            display: none;
+        }
+        
+        .wallet-address {
+            font-family: monospace;
+            word-break: break-all;
+            margin-bottom: 15px;
+        }
+        
+        .status {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            display: none;
+        }
+        
+        .success {
+            background-color: #065f46;
+            color: #34d399;
+        }
+        
+        .error {
+            background-color: #7f1d1d;
+            color: #f87171;
+        }
+        
+        appkit-button, appkit-network-button {
+            margin: 10px;
+        }
+        
+        .instructions {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 30px;
+            text-align: left;
+        }
+        
+        .instructions h3 {
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+        
+        .instructions ol {
+            padding-left: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .instructions li {
+            margin-bottom: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .button-group {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .wallet-btn {
+                width: 100%;
+                max-width: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="white" stroke-width="2"/>
+                    <path d="M12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z" stroke="white" stroke-width="2"/>
+                    <path d="M12 6V9" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M12 15V18" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M7.05078 7.05078L9.17078 9.17078" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M14.8281 14.8281L16.9481 16.9481" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M6 12H9" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M15 12H18" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M7.05078 16.9492L9.17078 14.8292" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M14.8281 9.17188L16.9481 7.05188" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </div>
+            <h1>Connect Your <span class="highlight">Wallet</span></h1>
+            <p class="subtitle">Securely connect your wallet and experience Web3</p>
+        </header>
+        
+        <div class="wallet-section">
+            <div class="button-group">
+                <button id="open-connect-modal" class="wallet-btn">Open Connect Modal</button>
+                <button id="open-network-modal" class="wallet-btn">Change Network</button>
+            </div>
+            
+            <div id="appkit-elements">
+                <appkit-button />
+                <appkit-network-button />
+            </div>
+            
+            <div id="walletInfo" class="wallet-info">
+                <p>Wallet Connected:</p>
+                <p id="walletAddress" class="wallet-address"></p>
+            </div>
+            
+            <div id="statusMessage" class="status"></div>
+        </div>
+        
+        <div class="instructions">
+            <h3>How to Connect:</h3>
+            <ol>
+                <li>Click "Open Connect Modal" to see all available wallet options</li>
+                <li>Select your preferred wallet (MetaMask, Coinbase, etc.)</li>
+                <li>Approve the connection in your wallet</li>
+                <li>Your wallet address will be displayed and sent to our backend</li>
+                <li>Use "Change Network" to switch to a different blockchain network</li>
+            </ol>
+            <p>Your wallet information will be securely sent to our backend server and then to the Glide webhook for processing.</p>
+        </div>
+    </div>
+
+    <script type="module">
+        // Import AppKit
+        import { createAppKit } from '@reown/appkit'
+        
+        // Initialize AppKit
+        const appKit = createAppKit({
+            projectId: 'fa8534299ecfeabd80c2158536ef447c', // Ganti dengan Project ID Anda dari Reown Cloud
+            chains: ['eip155:1'], // Ethereum Mainnet
+            defaultChain: 'eip155:1',
+            metadata: {
+                name: 'SBS2030 App',
+                description: 'SBS2030 Wallet Integration Example',
+                url: window.location.origin,
+                icons: []
+            }
+        })
+        
+        // Element references
+        const openConnectModalBtn = document.getElementById('open-connect-modal')
+        const openNetworkModalBtn = document.getElementById('open-network-modal')
+        const walletInfo = document.getElementById('walletInfo')
+        const walletAddress = document.getElementById('walletAddress')
+        const statusMessage = document.getElementById('statusMessage')
+        
+        // Event listeners for buttons
+        openConnectModalBtn.addEventListener('click', () => {
+            appKit.openModal()
+        })
+        
+        openNetworkModalBtn.addEventListener('click', () => {
+            appKit.openNetworkModal()
+        })
+        
+        // Listen for connection events
+        appKit.subscribeModal((state) => {
+            if (state.open) {
+                console.log('Modal is open')
+            } else {
+                console.log('Modal is closed')
+            }
+        })
+        
+        // Listen for account changes
+        appKit.subscribeAccounts((accounts) => {
+            if (accounts && accounts.length > 0) {
+                const address = accounts[0]
+                walletAddress.textContent = address
+                walletInfo.style.display = 'block'
+                
+                // Send wallet info to backend
+                sendToBackend(address)
+            } else {
+                walletInfo.style.display = 'none'
+            }
+        })
+        
+        // Listen for connection status
+        appKit.subscribeConnectionStatus((status) => {
+            console.log('Connection status:', status)
+        })
+        
+        // Function to send data to backend
+        async function sendToBackend(address) {
+            try {
+                const response = await fetch('http://localhost:3001/auth/wallet-connected', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        wallet_address: address,
+                        timestamp: new Date().toISOString(),
+                    }),
+                })
+                
+                if (response.ok) {
+                    showStatus('Wallet information sent to backend successfully!', 'success')
+                } else {
+                    throw new Error('Failed to send data to backend')
+                }
+            } catch (error) {
+                console.error('Error sending data to backend:', error)
+                showStatus('Failed to send wallet information: ' + error.message, 'error')
+            }
+        }
+        
+        // Function to show status messages
+        function showStatus(message, type) {
+            statusMessage.textContent = message
+            statusMessage.className = 'status ' + type
+            statusMessage.style.display = 'block'
+            
+            // Hide status after 5 seconds
+            setTimeout(() => {
+                statusMessage.style.display = 'none'
+            }, 5000)
+        }
+        
+        // Make appKit available globally for debugging
+        window.appKit = appKit
+    </script>
+</body>
+</html>
